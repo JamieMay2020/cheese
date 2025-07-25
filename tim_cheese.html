@@ -1,0 +1,432 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Tim Cheese</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      background-color: #000;
+      color: #fff;
+      font-family: 'Courier New', monospace;
+      height: 100vh;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      cursor: none;
+      position: relative;
+    }
+
+
+    .header {
+      padding: 20px;
+      text-align: center;
+      z-index: 100;
+    }
+
+    .title {
+      font-size: 3rem;
+      margin-bottom: 10px;
+      letter-spacing: 2px;
+      text-shadow: 0 0 10px rgba(255,255,255,0.5);
+      z-index: 100;
+    }
+
+    .links {
+      display: flex;
+      justify-content: center;
+      gap: 15px;
+      margin-top: 10px;
+      z-index: 100;
+    }
+
+    .button {
+      background-color: transparent;
+      color: white;
+      border: 1px solid white;
+      padding: 8px 15px;
+      cursor: none;
+      transition: all 0.3s;
+      text-decoration: none;
+      font-size: 0.9rem;
+      pointer-events: auto;
+    }
+
+    .button:hover {
+      background-color: rgba(255, 255, 255, 0.1);
+      box-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+    }
+
+    
+
+    .mouse-container {
+        position: absolute;
+        width: 750px;   /* Keep the container size */
+        height: 750px;  /* Keep the container size */
+        left: 50%;
+        top: 60%;
+        transform: translate(-50%, -50%);
+        opacity: 1;
+        transition: opacity 0s;
+        pointer-events: auto;
+        z-index: 5;
+    }
+
+    
+    body::before {
+        content: "";
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        box-shadow: 0 0 80px 10px rgba(0, 255, 0, 0.5) inset;
+        pointer-events: none;
+        z-index: 9999;
+        opacity: 0;
+        transition: opacity 0.5s ease-in-out;
+        }
+
+        body.glowing::before {
+        opacity: 1;
+        }
+
+    .mouse-img {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
+        pointer-events: none;
+        transform: scale(1); /* Keep the image at normal size */
+    }
+
+    .mouse-video {
+        position: absolute;
+        width: 90%;   /* Make the video slightly bigger */
+        height: 90%;  /* Make the video slightly bigger */
+        left: 6%;      /* Slight offset for the video to make it not aligned perfectly */
+        top: 7%;       /* Slight offset for the video */
+        display: none;
+        object-fit: contain;
+        pointer-events: none;
+        transform: scale(1); /* Keeps the scale of video to be slightly larger */
+    }
+
+    .mouse-video {
+      display: none;
+    }
+
+    .mouse-container:hover .mouse-img {
+      display: none;
+    }
+
+    .mouse-container:hover .mouse-video {
+      display: block;
+    }
+
+    .cheese {
+      position: absolute;
+      width: 50px;
+      height: 50px;
+      background-image: url('cheese.png');
+      background-size: contain;
+      background-repeat: no-repeat;
+      transform: translate(-50%, -50%);
+      opacity: 1;
+      filter: drop-shadow(0 0 5px yellow);
+      transition: opacity 0s;
+      pointer-events: none;
+      z-index: 999;
+    }
+
+    .trail {
+      position: absolute;
+      width: 8px;
+      height: 8px;
+      background-color: green;
+      border-radius: 100%;
+      opacity: 1;
+      animation: riseAndFade 1.5s forwards;
+      pointer-events: none;
+      z-index: 9;
+    }
+
+    @keyframes riseAndFade {
+      0% {
+        transform: translateY(0) scale(0.8);
+        opacity: 1;
+        box-shadow: 0 0 5px green;
+      }
+      100% {
+        transform: translateY(-100px) scale(1.2);
+        opacity: 0;
+        box-shadow: 0 0 15px green;
+      }
+    }
+
+    .content {
+      flex: 1;
+      position: relative;
+    }
+
+    .locked-in-text {
+      font-size: 1.5rem;
+      letter-spacing: 1px;
+      text-shadow: 0 0 10px rgba(255,255,255,0.5);
+      margin-top: 20px;
+      transition: opacity 0.3s;
+      opacity: 1;
+      position: absolute;
+      top: 26%; 
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 100;
+    }
+
+    .pumping-text {
+        position: absolute;
+        top: 3.5%;
+        left: 49.8%;
+        transform: translateX(-50%);
+        font-size: 2rem;
+        color: green;
+        text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+        opacity: 0;
+        transition: opacity 0.3s;
+        z-index: 100;
+        }
+    
+    .pumping-text.animate {
+        animation: pulse 1s infinite ease-in-out;
+        }
+
+    @keyframes pulse {
+        0%, 100% {
+            transform: translateX(-50%) scale(1);
+        }
+        50% {
+            transform: translateX(-50%) scale(1.2);
+        }
+        }
+    
+    .rain-drop {
+      position: fixed;
+      top: -50px;
+      width: 60px;
+      height: 60px;
+      background-size: contain;
+      background-repeat: no-repeat;
+      background-position: center;
+      pointer-events: none;
+      z-index: 20;
+      animation: fall linear forwards;
+      opacity: 1;
+    }
+
+    .cheese-drop {
+      background-image: url('cheese.png'); 
+    }
+
+    .dollar-drop {
+      background-image: url('dollar.png'); 
+    }
+
+    @keyframes fall {
+      0% {
+        transform: translateY(0);
+        opacity: 1; /* Start fully visible */
+      }
+      100% {
+        transform: translateY(110vh);
+        opacity: 0; /* Fade out as it falls */
+      }
+    }
+
+    .contract-address {
+      margin-top: 15px;
+      font-size: 1.5rem;
+      color: white;
+      text-align: center;
+      cursor: none; /* Prevents pointer on hover */
+      text-shadow: 0 0 5px yellow;
+      transition: opacity 0.2s;
+    }
+
+    .contract-address:hover {
+      opacity: 0.8;
+      cursor: none; /* Make sure it stays hidden on hover */
+    }
+
+    .contract-address-wrapper {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      position: relative;
+    }
+
+    .green-tick {
+      color: limegreen;
+      font-size: 1.2rem;
+      opacity: 0;
+      transition: opacity 0.3s ease-in-out;
+      transform: translateY(-5px); /* raises it up a bit */
+    }
+    .green-tick.show {
+      opacity: 1;
+      animation: fadeOutTick 1.5s forwards;
+    }
+
+    @keyframes fadeOutTick {
+      0% { opacity: 1; }
+      100% { opacity: 0; }
+    }
+
+  </style>
+</head>
+<body>
+  <div class="header">
+    <h1 class="title">TIM CHEESE</h1>
+    <div class="links">
+      <a href="https://pump.fun" class="button" target="_blank">PUMP.FUN</a>
+      <a href="https://x.com" class="button" target="_blank">X</a>
+      <a href="https://telegram.org" class="button" target="_blank">TELEGRAM</a>
+    </div>
+    <div class="contract-address-wrapper">
+      <p class="contract-address" onclick="copyToClipboard('YOUR_CONTRACT_ADDRESS')">CA: 0x1234...abcd</p>
+      <span class="green-tick" id="tick">✔</span>
+    </div>    
+    <p class="locked-in-text" id="locked-in">Locked In</p> <!-- "Locked in" text -->
+  </div>
+
+  <div class="content">
+    <div class="mouse-container" id="mouse">
+      <img src="mouse.png" class="mouse-img" />
+      <video class="mouse-video" autoplay muted loop playsinline>
+        <source src="mouse.mp4" type="video/mp4" />
+        Your browser does not support the video tag.
+      </video>
+    </div>
+    <div class="cheese" id="cheese"></div>
+    <div class="pumping-text" id="pumping-text">PUMPING</div> <!-- "Pumping" text hidden by default -->
+  </div>
+
+  <script>
+    setTimeout(() => {
+      document.getElementById('mouse').style.opacity = "1";
+    }, 2000);  
+  
+    setTimeout(() => {
+      document.getElementById('cheese').style.opacity = "1";
+    }, 1000);  
+  
+    document.addEventListener('mousemove', (e) => {
+      // Move the cheese
+      const cheese = document.getElementById('cheese');
+      
+      const x = e.clientX; 
+      const y = e.clientY;  
+  
+      const offsetX = 0;  
+      const offsetY = -230; 
+  
+      cheese.style.left = `${x + offsetX}px`;
+      cheese.style.top = `${y + offsetY}px`;
+  
+      // Create the green trail
+      const trail = document.createElement('div');
+      trail.classList.add('trail');
+      
+      const offsetX1 = 0;  
+      const offsetY1 = -230; 
+      const trailOffsetX = Math.random() * 40 - 20; // Increase range for wider spread
+      const trailOffsetY = Math.random() * 40 - 20; // Increase range for wider spread
+  
+      trail.style.left = `${x + trailOffsetX + offsetX1}px`;
+      trail.style.top = `${y + trailOffsetY + offsetY1}px`;
+  
+      document.querySelector('.content').appendChild(trail);
+  
+      setTimeout(() => {
+        trail.remove();
+      }, 1500);
+    });
+  
+    // Elements
+    const mouseContainer = document.getElementById('mouse');
+    const mouseVideo = mouseContainer.querySelector('.mouse-video');
+    const lockedInText = document.getElementById('locked-in');
+    const pumpingText = document.getElementById('pumping-text');
+    const body = document.body;
+  
+    // Rain function
+    let rainInterval;
+  
+    function createRainDrop(type) {
+        const drop = document.createElement('div');
+        drop.classList.add('rain-drop', type);
+
+        // Exclude middle 40% (30vw - 70vw)
+        const side = Math.random() < 0.5 ? 'left' : 'right';
+        let left;
+        if (side === 'left') {
+            left = Math.random() * 30; // 0–30vw
+        } else {
+            left = 70 + Math.random() * 30; // 70–100vw
+        }
+
+        drop.style.left = `${left}vw`;
+        
+        // Adjust fall speed: shorter duration = faster fall
+        drop.style.animationDuration = (2 + Math.random() * 2) + 's'; // (1s to 3s for each drop)
+        
+        document.body.appendChild(drop);
+
+        drop.addEventListener('animationend', () => {
+            drop.remove();
+        });
+        }
+  
+    // Hover events
+    mouseContainer.addEventListener('mouseenter', () => {
+      mouseVideo.currentTime = 0;
+      mouseVideo.play();
+  
+      lockedInText.style.opacity = '0';
+      pumpingText.style.opacity = '1';
+      pumpingText.classList.add('animate');
+      body.classList.add('glowing');
+  
+      // Start rain
+      rainInterval = setInterval(() => {
+        createRainDrop(Math.random() < 0.5 ? 'cheese-drop' : 'dollar-drop');
+        }, 100);
+    });
+  
+    mouseContainer.addEventListener('mouseleave', () => {
+      lockedInText.style.opacity = '1';
+      pumpingText.style.opacity = '0';
+      pumpingText.classList.remove('animate');
+      body.classList.remove('glowing');
+  
+      // Stop rain
+      clearInterval(rainInterval);
+    });
+
+    function copyToClipboard(text) {
+      navigator.clipboard.writeText(text).then(() => {
+        const tick = document.getElementById('tick');
+        tick.classList.add('show');
+        setTimeout(() => {
+          tick.classList.remove('show');
+        }, 1500);
+      });
+    }
+
+
+  </script>
+  
+</body>
+</html>
